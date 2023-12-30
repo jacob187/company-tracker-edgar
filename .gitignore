@@ -23,6 +23,10 @@ build/
 *.sql
 *.sql.gz
 
+# Environment files
+env
+.env
+
 # Company Files and Documents
 **/company_files/
 **/documents/
