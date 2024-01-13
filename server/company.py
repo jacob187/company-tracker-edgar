@@ -2,14 +2,13 @@ from fastapi import FastAPI, HTTPException, Query
 from typing import Annotated
 from datetime import datetime
 from setup import initialize_companies_and_identity as ici
-import time
 
 app = FastAPI()
 
 
 @app.get("/company/{ticker}")
 async def get_company_info(
-    tickers: Annotated[list[str], Query()], years_back: int | None = 2
+    tickers: Annotated[list[str], Query()], years_back: int | None = 1
 ):
     """
     Retrieves financial information for a list of companies.
@@ -24,7 +23,7 @@ async def get_company_info(
     Returns:
         dict: Dictionary containing financial information for each company.
     """
-    start_time = time.time()
+   
 
     companies = await ici(tickers)
     try:
@@ -72,7 +71,4 @@ async def get_company_info(
         for ticker, company_df in zip(tickers, company_facts_dataframe)
     }
 
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f"Elapsed time: {elapsed_time}")
     return output
