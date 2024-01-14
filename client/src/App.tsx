@@ -18,11 +18,11 @@ const theme = createTheme({
   },
 });
 
-const App: React.FC = () => {
+function App() {
   const [tickers, setTickers] = useState<string[]>(['']);
   const [yearsBack, setYearsBack] = useState<number>(1);
   const [data, setData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null); 
+  const [error, setError] = useState<string | null>(null);
 
   const handleTickerSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -32,7 +32,7 @@ const App: React.FC = () => {
       setError(null);
       setTickers(['']);
       setYearsBack(1);
-    } catch (error) {
+    } catch (err) {
       setError('Ticker not found');
     }
   };
@@ -82,6 +82,6 @@ const App: React.FC = () => {
       </Box>
     </ThemeProvider>
   );
-};
+}
 
 export default App;
