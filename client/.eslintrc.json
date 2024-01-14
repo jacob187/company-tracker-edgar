@@ -1,8 +1,12 @@
 {
-  "extends": ["airbnb", "airbnb-typescript"],
+  "ignorePatterns": ["vite.config.ts"],
+  "extends": ["airbnb", "airbnb-typescript", "prettier"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error"
+  },
   "parserOptions": {
     "project": "./tsconfig.json"
   },
   "parser": "@typescript-eslint/parser"
-
 }
