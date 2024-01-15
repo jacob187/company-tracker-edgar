@@ -3,7 +3,8 @@
   "extends": ["airbnb", "airbnb-typescript", "prettier"],
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "react/react-in-jsx-scope": 0
   },
   "parserOptions": {
     "project": "./client/tsconfig.json"
