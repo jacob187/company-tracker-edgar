@@ -6,7 +6,7 @@
     "prettier/prettier": "error"
   },
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": "./client/tsconfig.json"
   },
   "parser": "@typescript-eslint/parser"
 }
