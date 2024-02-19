@@ -11,7 +11,7 @@ decorator==5.1.1
 edgartools==2.6.3
 emoji==2.9.0
 et-xmlfile==1.1.0
-fastapi==0.108.0
+fastapi==0.109.1
 fastcore==1.5.29
 filetype==1.2.0
 h11==0.14.0
