@@ -28,6 +28,15 @@ const formatter = new Intl.NumberFormat('en-US', {
 });
 
 function FinancialDataTable({ data }: FinancialDataTableProps) {
+  const allPeriods = new Set<string>();
+  Object.values(data).forEach((financialData) =>
+    Object.values(financialData).forEach((values) =>
+      Object.keys(values).forEach((period) => allPeriods.add(period)),
+    ),
+  );
+
+  const timePeriods = Array.from(allPeriods).sort();
+
   return (
     <>
       {Object.entries(data).map(([ticker, financialData]) => (
@@ -35,32 +44,32 @@ function FinancialDataTable({ data }: FinancialDataTableProps) {
           <Typography variant="h6" gutterBottom component="div">
             {ticker}
           </Typography>
-          {Object.entries(financialData).map(([category, values]) => (
-            <TableContainer component={Paper} key={category}>
-              <Table size="small" aria-label="a dense table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{category}</TableCell>
-                    {Object.keys(values).map((quarter) => (
-                      <TableCell key={quarter}>{quarter}</TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
+          <TableContainer component={Paper}>
+            <Table size="small" aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Category</TableCell>
+                  {timePeriods.map((period) => (
+                    <TableCell key={period}>{period}</TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Object.entries(financialData).map(([category, values]) => (
+                  <TableRow key={category}>
                     <TableCell component="th" scope="row">
-                      Value
+                      {category}
                     </TableCell>
-                    {Object.values(values).map((value) => (
-                      <TableCell key={value}>
-                        {formatter.format(value)}
+                    {timePeriods.map((period) => (
+                      <TableCell key={period}>
+                        {formatter.format(values[period] ?? 0)}
                       </TableCell>
                     ))}
                   </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          ))}
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
       ))}
     </>
