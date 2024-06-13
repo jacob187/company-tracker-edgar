@@ -5,6 +5,8 @@ from setup import Setup
 
 app = FastAPI()
 
+#  Create API enpoint where the user can list the facts they want to get for a company
+
 
 @app.get("/company/{ticker}")
 async def get_company_info(
@@ -14,7 +16,7 @@ async def get_company_info(
     setup = Setup()
     companies = await setup.initialize_companies(tickers)
     company_facts_dataframe = get_company_facts(companies)
-    frames = generate_frames(years_back)
+    frames = generate_filing_periods(years_back)
     output = generate_output(tickers, company_facts_dataframe, frames)
 
     return output
@@ -31,7 +33,7 @@ def get_company_facts(companies: dict) -> list:
     return company_facts_dataframe
 
 
-def generate_frames(years_back: int) -> list[str]:
+def generate_filing_periods(years_back: int) -> list[str]:
     current_year = datetime.now().year
     frames = [
         f"CY{year}Q{quarter}{suffix}"
@@ -65,8 +67,19 @@ def generate_output(
         }
         for ticker, company_df in zip(tickers, company_facts_dataframe)
     }
-    cleaned_output = remove_empty_facts(output)
+    removed_empty_values = remove_empty_facts(output)
+    cleaned_output = remove_trailing_I_from_frames(removed_empty_values)
     return cleaned_output
+
+
+def remove_trailing_I_from_frames(output: dict) -> dict:
+    return {
+        ticker: {
+            fact: {frame.rstrip("I"): value for frame, value in values.items()}
+            for fact, values in company.items()
+        }
+        for ticker, company in output.items()
+    }
 
 
 def remove_empty_facts(data: dict) -> dict:
