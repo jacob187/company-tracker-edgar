@@ -1,24 +1,32 @@
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from typing import Annotated
 from datetime import datetime
 from setup import Setup
+import os
 
 app = FastAPI()
 
-#  Create API enpoint where the user can list the facts they want to get for a company
+# Mount the static files from the 'dist' directory
+app.mount("/assets", StaticFiles(directory="../client/dist/assets"), name="static")
+
+
+# Serve the index.html for the root path
+@app.get("/")
+async def serve_spa_root():
+    return FileResponse("dist/index.html")
 
 
 @app.get("/company/{ticker}")
 async def get_company_info(
     tickers: Annotated[list[str], Query()], years_back: int | None = 1
 ):
-
     setup = Setup()
     companies = await setup.initialize_companies(tickers)
     company_facts_dataframe = get_company_facts(companies)
     frames = generate_filing_periods(years_back)
     output = generate_output(tickers, company_facts_dataframe, frames)
-
     return output
 
 
@@ -87,3 +95,9 @@ def remove_empty_facts(data: dict) -> dict:
         ticker: {fact: values for fact, values in company.items() if values}
         for ticker, company in data.items()
     }
+
+
+# Serve the index.html for any other routes (for client-side routing)
+@app.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    return FileResponse("dist/index.html")
